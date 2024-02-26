@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructures.Migrations
 {
     /// <inheritdoc />
-    public partial class _001InitialProject : Migration
+    public partial class _001InitialDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -78,7 +78,7 @@ namespace Infrastructures.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    HostID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PackageID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     VenueID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
@@ -99,6 +99,12 @@ namespace Infrastructures.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_Parties_Users_HostID",
+                        column: x => x.HostID,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Parties_Venues_VenueID",
                         column: x => x.VenueID,
                         principalTable: "Venues",
@@ -111,7 +117,7 @@ namespace Infrastructures.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GuestID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PartyID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Request = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Response = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -124,15 +130,18 @@ namespace Infrastructures.Migrations
                         name: "FK_Bookings_Parties_PartyID",
                         column: x => x.PartyID,
                         principalTable: "Parties",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Bookings_Users_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Bookings_Users_GuestID",
+                        column: x => x.GuestID,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_GuestID",
+                table: "Bookings",
+                column: "GuestID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_PartyID",
@@ -141,9 +150,9 @@ namespace Infrastructures.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_UserID",
-                table: "Bookings",
-                column: "UserID");
+                name: "IX_Parties_HostID",
+                table: "Parties",
+                column: "HostID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parties_PackageID",
@@ -171,10 +180,10 @@ namespace Infrastructures.Migrations
                 name: "Parties");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Packages");
 
             migrationBuilder.DropTable(
-                name: "Packages");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Venues");

@@ -14,8 +14,6 @@ namespace Domain.Entities
 		public decimal DefaultCost { get; set; }
 		public decimal AdditionalCost { get; set; }
 		public decimal TotalPrice { get; set; }
-
-		[ForeignKey("HostID")]
 		public virtual User Host { get; set; }
 		public virtual Booking Booking { get; set; }
 		public virtual Package Package { get; set; }

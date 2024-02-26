@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructures.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240226072154_007-Fix-Database")]
-    partial class _007FixDatabase
+    [Migration("20240226152712_001-Initial-Database")]
+    partial class _001InitialDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -192,13 +192,13 @@ namespace Infrastructures.Migrations
                     b.HasOne("Domain.Entities.User", "Guest")
                         .WithMany("Bookings")
                         .HasForeignKey("GuestID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Party", "Party")
                         .WithOne("Booking")
                         .HasForeignKey("Domain.Entities.Booking", "PartyID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Guest");

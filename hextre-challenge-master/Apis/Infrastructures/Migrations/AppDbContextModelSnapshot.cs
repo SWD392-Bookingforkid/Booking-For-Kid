@@ -189,13 +189,13 @@ namespace Infrastructures.Migrations
                     b.HasOne("Domain.Entities.User", "Guest")
                         .WithMany("Bookings")
                         .HasForeignKey("GuestID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Party", "Party")
                         .WithOne("Booking")
                         .HasForeignKey("Domain.Entities.Booking", "PartyID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Guest");

@@ -4,7 +4,6 @@ namespace Domain.Entities
 {
 	public class Party : BaseEntity
 	{
-		[ForeignKey("User")]
 		public Guid HostID { get; set; }
 		public Guid PackageID { get; set; }
 		public Guid VenueID { get; set; }
@@ -15,9 +14,10 @@ namespace Domain.Entities
 		public decimal DefaultCost { get; set; }
 		public decimal AdditionalCost { get; set; }
 		public decimal TotalPrice { get; set; }
+
+		[ForeignKey("HostID")]
 		public virtual User Host { get; set; }
-		//public virtual Booking Booking { get; set; }
-		public virtual ICollection<Booking>? Bookings { get; set; }
+		public virtual Booking Booking { get; set; }
 		public virtual Package Package { get; set; }
 		public virtual Venue Venue { get; set; }
 	}

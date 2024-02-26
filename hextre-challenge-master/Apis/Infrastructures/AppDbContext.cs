@@ -22,11 +22,16 @@ namespace Infrastructures
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Party>().Property(p => p.AdditionalCost).HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Party>().Property(p => p.DefaultCost).HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Party>().Property(p => p.TotalPrice).HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Package>().Property(p => p.Price).HasColumnType("decimal(18,2)");
+
             modelBuilder.Entity<Party>()
                 .HasOne(p => p.Host)
                 .WithMany(u => u.Parties)
-                .HasForeignKey(p => p.HostID)
-                .OnDelete(DeleteBehavior.NoAction);
+                .HasForeignKey(p => p.HostID);
+
 
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Guest)
@@ -36,7 +41,7 @@ namespace Infrastructures
 
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Party)
-                .WithMany(p => p.Bookings)
+                .WithOne(p => p.Booking)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

@@ -1,9 +1,13 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entities
 {
-	public class Party : BaseEntity
+	public class Party
 	{
+		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+		public Guid Id { get; set; }
 		public Guid HostID { get; set; }
 		public Guid PackageID { get; set; }
 		public Guid VenueID { get; set; }

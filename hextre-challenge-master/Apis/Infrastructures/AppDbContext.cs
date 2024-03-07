@@ -21,6 +21,9 @@ namespace Infrastructures
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Role>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<User>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
+
             modelBuilder
                 .Entity<Party>()
                 .Property(p => p.AdditionalCost)

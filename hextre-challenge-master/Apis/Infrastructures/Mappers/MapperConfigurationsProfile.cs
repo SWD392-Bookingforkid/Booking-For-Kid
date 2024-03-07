@@ -1,7 +1,6 @@
-﻿using Application.ViewModels.ChemicalsViewModels;
-using AutoMapper;
-using Application.Commons;
+﻿using AutoMapper;
 using Domain.Entities;
+using Application.ViewModels.UserViewModels;
 
 namespace Infrastructures.Mappers
 {
@@ -9,7 +8,7 @@ namespace Infrastructures.Mappers
     {
         public MapperConfigurationsProfile()
         {
-           
+            CreateMap<User, UserLoginDTO>().ReverseMap();
         }
     }
 }

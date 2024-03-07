@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructures.Repositories
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         internal AppDbContext context;
         internal DbSet<TEntity> dbSet;
@@ -87,5 +87,11 @@ namespace Infrastructures.Repositories
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
         }
+
+        public virtual async Task<bool> IsExistsAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await dbSet.AnyAsync(predicate);
+        }
+
     }
 }

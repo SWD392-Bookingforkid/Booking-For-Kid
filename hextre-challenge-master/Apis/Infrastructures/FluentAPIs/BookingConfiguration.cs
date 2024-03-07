@@ -8,9 +8,6 @@ namespace Infrastructures.FluentAPIs
     {
         public void Configure(EntityTypeBuilder<Booking> builder)
         {
-            builder.HasKey(x => x.Id);
-
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
             // Thiết lập quan hệ n-1 với bảng User (Guest)
             builder.HasOne(b => b.Guest)

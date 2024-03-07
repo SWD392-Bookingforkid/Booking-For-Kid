@@ -1,10 +1,9 @@
 ﻿using System.Linq.Expressions;
-using Application.Commons;
 using Domain.Entities;
 
 namespace Application.Repositories
 {
-    public interface IGenericRepository<TEntity> where TEntity : BaseEntity
+    public interface IGenericRepository<TEntity> where TEntity : class
     {
         Task<IEnumerable<TEntity>> GetAsync(
             Expression<Func<TEntity, bool>> filter = null,
@@ -22,5 +21,6 @@ namespace Application.Repositories
         void Delete(TEntity entityToDelete);
 
         void Update(TEntity entityToUpdate);
+        Task<bool> IsExistsAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

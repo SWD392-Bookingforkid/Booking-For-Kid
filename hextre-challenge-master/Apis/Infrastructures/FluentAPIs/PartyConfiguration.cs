@@ -8,10 +8,6 @@ namespace Infrastructures.FluentAPIs
     {
         public void Configure(EntityTypeBuilder<Party> builder)
         {
-            builder.HasKey(x => x.Id);
-
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
-
             // Thiết lập quan hệ n-1 với bảng User (Host)
             builder.HasOne(p => p.Host)
                    .WithMany(u => u.Parties)

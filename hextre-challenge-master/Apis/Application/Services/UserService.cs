@@ -30,10 +30,10 @@ namespace Application.Services
 
                 if (!user.Any())
                 {
-                    return "Invalid Email or PassWord";
+                    return "Invalid Email or Password, Please try again !! ";
                 }
 
-                var loggedInUser = user.First();
+                var loggedInUser = user.FirstOrDefault();
 
                 var role = await _unitOfWork.RoleRepository.GetAsync(a => a.Id == loggedInUser.RoleID);
 
@@ -46,23 +46,27 @@ namespace Application.Services
             }
         }
 
-        public async Task RegisterAsync(UserLoginDTO userObject)
+        public async Task<string> RegisterAsync(UserLoginDTO userObject)
         {
             try
             {
-                // Kiểm tra xem username đã tồn tại chưa
+                // Check user with the email is existed ?
                 var isExists = await _unitOfWork.UserRepository.IsExistsAsync(u => u.Email.Equals(userObject.Email));
 
                 if (isExists)
                 {
-                    throw new Exception("Email already exists. Please try again with a different email.");
+                    return "Email already exists. Please try again with a different email.";
                 }
 
                 var user = _mapper.Map<User>(userObject);
-                user.PasswordHash = userObject.Password.Hash(); // Hash mật khẩu
+                user.PasswordHash = userObject.Password.Hash(); // Hash password
+
+                user.RoleID = (await _unitOfWork.RoleRepository.GetAsync(a => a.Name == "Guest")).FirstOrDefault().Id;
 
                 _unitOfWork.UserRepository.Insert(user);
                 await _unitOfWork.SaveChangeAsync();
+
+                return "Registered successfully";
             }
             catch (Exception exception)
             {

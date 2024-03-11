@@ -13,6 +13,7 @@ namespace Domain.Entities
 		public string Request { get; set; }
 		public string Response { get; set; }
 		public bool Status { get; set; }
+		public decimal TotalPrice { get; set; }
 		public virtual Party? Party { get; set; }
 		public virtual User? Guest { get; set; }
 	}

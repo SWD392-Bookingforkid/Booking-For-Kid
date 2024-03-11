@@ -16,6 +16,9 @@ namespace Infrastructures
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Party> Parties { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<FeedbackReply> FeedbackReplies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,20 +27,11 @@ namespace Infrastructures
             modelBuilder.Entity<Role>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
             modelBuilder.Entity<User>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
 
-            modelBuilder
-                .Entity<Party>()
-                .Property(p => p.AdditionalCost)
-                .HasColumnType("decimal(18,2)");
-            modelBuilder
-                .Entity<Party>()
-                .Property(p => p.DefaultCost)
-                .HasColumnType("decimal(18,2)");
-            modelBuilder.Entity<Party>().Property(p => p.TotalPrice).HasColumnType("decimal(18,2)");
-            modelBuilder.Entity<Package>().Property(p => p.Price).HasColumnType("decimal(18,2)");
 
             modelBuilder.ApplyConfiguration(new PartyConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new BookingConfiguration());
+            modelBuilder.ApplyConfiguration(new FeedbackConfiguration());
         }
     }
 }

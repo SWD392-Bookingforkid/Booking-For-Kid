@@ -15,12 +15,12 @@ namespace Domain.Entities
 		public DateTime Date { get; set; }
 		public string? Theme { get; set; }
 		public string? Image { get; set; }
-		public decimal DefaultCost { get; set; }
-		public decimal AdditionalCost { get; set; }
-		public decimal TotalPrice { get; set; }
+		public decimal DefaultPrice { get; set; }
 		public virtual User Host { get; set; }
 		public virtual Booking Booking { get; set; }
 		public virtual Package Package { get; set; }
 		public virtual Venue Venue { get; set; }
+
+		public virtual Feedback? Feedback { get; set; }
 	}
 }

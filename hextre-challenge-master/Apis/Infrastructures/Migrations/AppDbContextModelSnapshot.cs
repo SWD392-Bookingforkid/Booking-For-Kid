@@ -45,6 +45,9 @@ namespace Infrastructures.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GuestID");
@@ -53,6 +56,61 @@ namespace Infrastructures.Migrations
                         .IsUnique();
 
                     b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CustomerID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PartyID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerID")
+                        .IsUnique();
+
+                    b.HasIndex("PartyID")
+                        .IsUnique();
+
+                    b.ToTable("Feedbacks");
+                });
+
+            modelBuilder.Entity("Domain.Entities.FeedbackReply", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FeedbackID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("HostID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ReplyContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FeedbackID")
+                        .IsUnique();
+
+                    b.HasIndex("HostID")
+                        .IsUnique();
+
+                    b.ToTable("FeedbackReplies");
                 });
 
             modelBuilder.Entity("Domain.Entities.Package", b =>
@@ -66,6 +124,9 @@ namespace Infrastructures.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberOfTable")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -81,13 +142,10 @@ namespace Infrastructures.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("AdditionalCost")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("DefaultCost")
+                    b.Property<decimal>("DefaultPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("HostID")
@@ -105,9 +163,6 @@ namespace Infrastructures.Migrations
                     b.Property<string>("Theme")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Guid>("VenueID")
                         .HasColumnType("uniqueidentifier");
 
@@ -120,6 +175,37 @@ namespace Infrastructures.Migrations
                     b.HasIndex("VenueID");
 
                     b.ToTable("Parties");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("AmountMoney")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("BookingID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("RemainingAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("isDeposit")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingID");
+
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -205,6 +291,44 @@ namespace Infrastructures.Migrations
                     b.Navigation("Party");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Feedback", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "Customer")
+                        .WithOne("Feedback")
+                        .HasForeignKey("Domain.Entities.Feedback", "CustomerID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Party", "Party")
+                        .WithOne("Feedback")
+                        .HasForeignKey("Domain.Entities.Feedback", "PartyID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Party");
+                });
+
+            modelBuilder.Entity("Domain.Entities.FeedbackReply", b =>
+                {
+                    b.HasOne("Domain.Entities.Feedback", "Feedback")
+                        .WithOne("FeedbackReply")
+                        .HasForeignKey("Domain.Entities.FeedbackReply", "FeedbackID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.User", "Host")
+                        .WithOne("FeedbackReply")
+                        .HasForeignKey("Domain.Entities.FeedbackReply", "HostID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Feedback");
+
+                    b.Navigation("Host");
+                });
+
             modelBuilder.Entity("Domain.Entities.Party", b =>
                 {
                     b.HasOne("Domain.Entities.User", "Host")
@@ -232,6 +356,17 @@ namespace Infrastructures.Migrations
                     b.Navigation("Venue");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Payment", b =>
+                {
+                    b.HasOne("Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.HasOne("Domain.Entities.Role", "Role")
@@ -243,15 +378,26 @@ namespace Infrastructures.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Feedback", b =>
+                {
+                    b.Navigation("FeedbackReply");
+                });
+
             modelBuilder.Entity("Domain.Entities.Party", b =>
                 {
                     b.Navigation("Booking")
                         .IsRequired();
+
+                    b.Navigation("Feedback");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("Feedback");
+
+                    b.Navigation("FeedbackReply");
 
                     b.Navigation("Parties");
                 });

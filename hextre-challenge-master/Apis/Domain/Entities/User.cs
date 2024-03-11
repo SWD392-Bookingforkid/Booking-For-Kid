@@ -19,5 +19,7 @@ namespace Domain.Entities
         public virtual Role? Role { get; set; }
         public virtual ICollection<Party>? Parties { get; set; }
         public virtual ICollection<Booking>? Bookings { get; set; }
+        public virtual Feedback? Feedback { get; set; }
+        public virtual FeedbackReply? FeedbackReply { get; set; }
     }
 }

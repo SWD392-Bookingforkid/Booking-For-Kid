@@ -2,6 +2,12 @@
 {
     public class GlobalExceptionMiddleware : IMiddleware
     {
+        private readonly ILogger<GlobalExceptionMiddleware> _logger;
+
+        public GlobalExceptionMiddleware(ILogger<GlobalExceptionMiddleware> logger)
+        {
+            _logger = logger;
+        }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try

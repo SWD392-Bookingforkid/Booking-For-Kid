@@ -20,10 +20,6 @@ namespace Infrastructures
             // ATTENTION: if you do migration please check file README.md
             services.AddDbContext<AppDbContext>(option => option.UseSqlServer(databaseConnection));
 
-
-            // Logging Service will be called everywhere in the project
-            services.AddSingleton<ILoggingService, LoggingService>();
-
             // this configuration just use in-memory for fast develop
             //services.AddDbContext<AppDbContext>(option => option.UseInMemoryDatabase("test"));
 

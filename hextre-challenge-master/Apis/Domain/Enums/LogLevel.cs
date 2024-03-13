@@ -2,9 +2,9 @@ namespace Domain.Enums
 {
     public enum LogLevel
     {
-        Debug = 0,
-        Error = 1,
-        Warning = 2,
-        Info = 3
+        DBG = 0,
+        ERR = 1,
+        WRN = 2,
+        INF = 3
     }
 }

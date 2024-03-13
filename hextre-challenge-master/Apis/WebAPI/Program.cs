@@ -2,14 +2,22 @@ using Infrastructures;
 using WebAPI.Middlewares;
 using WebAPI;
 using Application.Commons;
+using Serilog;
+using Application.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // parse the configuration in appsettings
 var configuration = builder.Configuration.Get<AppConfiguration>();
+
 builder.Services.AddInfrastructuresService(configuration.DatabaseConnection);
 builder.Services.AddWebAPIService();
-builder.Services.AddSingleton(configuration);
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .Enrich.With<MessageIdEnricher>()
+    ); ;
 
 /*
     register with singleton life time
@@ -26,11 +34,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSerilogRequestLogging();
+
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<PerformanceMiddleware>();
 app.MapHealthChecks("/healthchecks");
 app.UseHttpsRedirection();
-// todo authentication
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
